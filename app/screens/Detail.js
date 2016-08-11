@@ -3,10 +3,10 @@ import {
     StyleSheet,
     Text,
     View,
+    ScrollView,
     ListView,
     Image,
     TouchableOpacity,
-    TouchableHighlight,
     Linking,
     InteractionManager,
     ActivityIndicator,
@@ -163,36 +163,39 @@ class Detail extends Component {
                 {this.state.streamModalVisible ? this._renderStreamModal() : null}
 
                 <View style={styles.navbar}>
-                    <TouchableHighlight onPress={this._onBackPressHandler.bind(this)}>
+                    <TouchableOpacity onPress={this._onBackPressHandler.bind(this)}>
                         <View style={styles.backContainer}>
                             <Text style={styles.backText}>Back</Text>
                         </View>
-                    </TouchableHighlight>
+                    </TouchableOpacity>
 
-                    <TouchableHighlight onPress={this._onToggleFavoriteHandler.bind(this)}>
+                    <TouchableOpacity onPress={this._onToggleFavoriteHandler.bind(this)}>
                         <View style={styles.favouriteContainer}>
                             <Text style={styles.favouriteText}>Favourite ({this.props.favorite ? '1' : '0'})</Text>
                         </View>
-                    </TouchableHighlight>
+                    </TouchableOpacity>
                 </View>
-
-                <View style={styles.contentContainer}>
-                    <TouchableHighlight onPress={this._onPlayPressHandler.bind(this)}>
+                <ScrollView
+                    onScroll={() => { console.log('onScroll!'); }}
+                    scrollEventThrottle={200}
+                    contentContainerStyle={styles.contentContainer}
+                    >
+                    <TouchableOpacity onPress={this._onPlayPressHandler.bind(this)}>
                         <View style={styles.coverContainer}>
                             <Image source={{uri: this.props.release.cover}} style={styles.coverImage} resizeMode={Image.resizeMode.contain} />
                         </View>
-                    </TouchableHighlight>
+                    </TouchableOpacity>
 
                     <View style={styles.releaseContainer}>
                         <Text style={styles.nameText}>{this.props.release.name}</Text>
                         <Text style={styles.artistText}>{this.props.release.artist}</Text>
                     </View>
 
-                    <TouchableHighlight onPress={this._onPlayPressHandler.bind(this)}>
+                    <TouchableOpacity onPress={this._onPlayPressHandler.bind(this)}>
                         <View style={styles.playContainer}>
                             <Text style={styles.playText}>PLAY</Text>
                         </View>
-                    </TouchableHighlight>
+                    </TouchableOpacity>
 
                     <View style={styles.rankingContainer}>
                         <Text style={styles.rankingLabelText}>Grade: </Text>
@@ -200,7 +203,6 @@ class Detail extends Component {
                             <Text style={styles.rankingSymbolText}>{this.props.release.average_ranking}</Text>
                         </View>
                     </View>
-
                     <View style={styles.genresContainer}>
                         {this.props.release.genres.map((genre, index) => {
                             return (
@@ -210,7 +212,7 @@ class Detail extends Component {
                             );
                         })}
                     </View>
-                </View>
+                </ScrollView>
             </View>
         );
     }
@@ -284,12 +286,9 @@ const styles = StyleSheet.create({
     },
     contentContainer: {
         padding: 10,
-        flex: 1,
         alignItems: 'center',
-        flexDirection: 'column'
     },
     coverContainer: {
-        marginTop: 20,
         marginBottom: 20
     },
     coverImage: {
