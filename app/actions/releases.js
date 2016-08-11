@@ -1,9 +1,6 @@
 const REQUEST_RELEASES = 'REQUEST_RELEASES';
 const RECEIVE_RELEASES = 'RECEIVE_RELEASES';
 
-// http://muteparrot.com/api/v1/releases/latest/?country=SE&limit=19&offset=0&stream=spotify
-//
-
 const requestReleases = (category) => {
     return {
         type: REQUEST_RELEASES,

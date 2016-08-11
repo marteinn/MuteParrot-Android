@@ -5,8 +5,6 @@ import Detail from '../screens/Detail';
 
 class App extends Component {
     navigatorRenderScene(route, navigator) {
-        console.log(route);
-
         switch(route.name) {
             case 'latest':
                 return <Latest style={styles.contentContainer} navigator={navigator} {...route.passProps} />

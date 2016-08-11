@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import {connect} from 'react-redux'
 import {toggleFavorite} from '../actions/favorites';
+import {markReleaseAsVisited} from '../actions/visited';
 
 class Detail extends Component {
     constructor(props, context) {
@@ -35,6 +36,10 @@ class Detail extends Component {
 
         BackAndroid.addEventListener('hardwareBackPress',
             this._hardwareBackPressHandler);
+
+        if (! this.props.visited) {
+            this.props.dispatch(markReleaseAsVisited(this.props.release.slug));
+        }
     }
 
     componentWillUnmount() {
@@ -43,7 +48,6 @@ class Detail extends Component {
     }
 
     _hardwareBackPressHandler() {
-        console.log('hardwareBackPressHandler');
         this.props.navigator.pop();
         return true;
     }
@@ -176,7 +180,6 @@ class Detail extends Component {
                     </TouchableOpacity>
                 </View>
                 <ScrollView
-                    onScroll={() => { console.log('onScroll!'); }}
                     scrollEventThrottle={200}
                     contentContainerStyle={styles.contentContainer}
                     >
@@ -373,10 +376,12 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state, ownProps) => {
     let release = state.releases[ownProps.slug];
     let favorite = state.favorites.includes(release.slug);
+    let visited = state.visited.includes(release.slug);
 
     return {
         release,
         favorite,
+        visited
     };
 }
 

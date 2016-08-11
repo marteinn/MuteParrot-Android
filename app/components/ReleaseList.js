@@ -69,18 +69,20 @@ class ReleaseList extends React.Component {
         console.log('onRefresh!');
     }
 
+    _renderRow(item, sectionId, rowId) {
+        let visited = this.props.visited.includes(item.slug);
+
+        return (
+            <ReleaseRow release={item} visited={visited} onRowPress={this._onRowPressHandler.bind(this)} />
+        );
+    }
+
     render() {
         return (
             <ListView
                 style={styles.container}
                 dataSource={this.state.dataSource}
-                renderRow={(item, sectionId, rowId) => {
-                    return (
-                        <TouchableHighlight onPress={this._onRowPressHandler.bind(this, item)}>
-                            <ReleaseRow release={item} />
-                        </TouchableHighlight>
-                    )
-                }}
+                renderRow={this._renderRow.bind(this)}
                 renderSeparator={(sectionId, rowId) => <View key={`${sectionId}separator${rowId}`} style={styles.separator} />}
                 renderSectionHeader={(sectionData, sectionId) => <SectionHeader title={sectionId} />}
                 onEndReached={this.props.onEndReached.bind(this)}
@@ -96,7 +98,8 @@ class ReleaseList extends React.Component {
 }
 
 ReleaseList.defaultProps = {
-    items: []
+    items: [],
+    visited: [],
 }
 
 const styles = StyleSheet.create({

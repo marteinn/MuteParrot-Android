@@ -39,9 +39,13 @@ class Latest extends Component {
     render() {
         return (
             <View style={styles.container}>
+                <View style={styles.navbar}>
+                    <Text style={styles.navbarTitleText}>Latest releases</Text>
+                </View>
                 <ReleaseList
                     style={styles.listContainer}
                     items={this.props.items}
+                    visited={this.props.visited}
                     onListPress={this.onReleaseListPressHandler.bind(this)}
                     onEndReached={this.onEndReachedHandler.bind(this)}
                 />
@@ -55,6 +59,15 @@ const styles = StyleSheet.create({
         flex: 1,
         //justifyContent: 'center',
         //alignItems: 'center',
+    },
+    navbar: {
+        height: 50,
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'row',
+    },
+    navbarTitleText: {
+        color: '#FFF',
     },
     listContainer: {
         flex: 1,
@@ -76,7 +89,8 @@ const mapStateToProps = (state, ownProps) => {
 
     return {
         isFetching: categoryState.isFetching,
-        items
+        items,
+        visited: state.visited,
     }
 }
 
@@ -85,7 +99,8 @@ Latest = connect(mapStateToProps)(Latest);
 
 Latest.defaultProps = {
     isFetching: false,
-    items: []
+    items: [],
+    visited: []
 }
 
 export default Latest;
