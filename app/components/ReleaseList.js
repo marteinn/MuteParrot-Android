@@ -9,9 +9,11 @@ import {
     RefreshControl
 } from 'react-native';
 import {connect} from 'react-redux'
+import moment from 'moment';
 import {fetchReleases} from '../actions/releases';
 import ReleaseRow from './ReleaseRow';
 import SectionHeader from './SectionHeader';
+
 
 class ReleaseList extends React.Component {
     constructor(props) {
@@ -41,8 +43,13 @@ class ReleaseList extends React.Component {
 
     _formatSections(data) {
         let sectionData = {};
+        let today = moment().format('YYYY-MM-DD');
         data.map((item) => {
             let key = item.published.substr(0, 10);
+
+            if (key === today) {
+                key = 'Today';
+            }
 
             if (! sectionData[key]) {
                 sectionData[key] = [];
