@@ -14,6 +14,7 @@ import {
     Modal,
 } from 'react-native';
 import {connect} from 'react-redux'
+import {toggleFavorite} from '../actions/favorites';
 
 class Detail extends Component {
     constructor(props, context) {
@@ -49,6 +50,10 @@ class Detail extends Component {
 
     _onBackPressHandler() {
         this.props.navigator.pop();
+    }
+
+    _onToggleFavoriteHandler() {
+        this.props.dispatch(toggleFavorite(this.props.release.slug));
     }
 
     _onPlayPressHandler() {
@@ -164,9 +169,9 @@ class Detail extends Component {
                         </View>
                     </TouchableHighlight>
 
-                    <TouchableHighlight>
+                    <TouchableHighlight onPress={this._onToggleFavoriteHandler.bind(this)}>
                         <View style={styles.favouriteContainer}>
-                            <Text style={styles.favouriteText}>Favourite (1)</Text>
+                            <Text style={styles.favouriteText}>Favourite ({this.props.favorite ? '1' : '0'})</Text>
                         </View>
                     </TouchableHighlight>
                 </View>
@@ -368,9 +373,11 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state, ownProps) => {
     let release = state.releases[ownProps.slug];
+    let favorite = state.favorites.includes(release.slug);
 
     return {
-        release
+        release,
+        favorite,
     };
 }
 
