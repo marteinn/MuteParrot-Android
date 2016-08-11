@@ -3,7 +3,8 @@ import {
     StyleSheet,
     Text,
     View,
-    ListView
+    ListView,
+    ActivityIndicator,
 } from 'react-native';
 import {connect} from 'react-redux'
 import {
@@ -47,7 +48,20 @@ class Latest extends Component {
         this.props.dispatch(fetchReleases('latest'));
     }
 
+
+    _renderPlaceholderView() {
+        return (
+            <View style={styles.preloaderContainer}>
+                <ActivityIndicator size="large" color="#99FFFF" />
+            </View>
+        );
+    }
+
     render() {
+        if (! this.props.items.length) {
+            return this._renderPlaceholderView();
+        }
+
         return (
             <View style={styles.container}>
                 <View style={styles.navbar}>
@@ -88,6 +102,12 @@ const styles = StyleSheet.create({
         fontSize: 10,
         textAlign: 'center',
         //margin: 10,
+    },
+    preloaderContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#13212F',
     },
 });
 

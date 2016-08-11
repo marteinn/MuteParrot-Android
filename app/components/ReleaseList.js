@@ -23,8 +23,12 @@ class ReleaseList extends React.Component {
             rowHasChanged: (r1, r2) => r1 !== r2,
             sectionHeaderHasChanged: (s1, s2) => s1 !== s2,
         });
+
+        let sectionData = this._formatSections(this.props.items);
+
         this.state = {
-            dataSource: ds.cloneWithRows([props.items]),
+            items: this.props.items,
+            dataSource: ds.cloneWithRowsAndSections(sectionData),
             refreshing: false
         };
     }

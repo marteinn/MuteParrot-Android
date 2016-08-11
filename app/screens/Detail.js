@@ -169,16 +169,17 @@ class Detail extends Component {
                 <View style={styles.navbar}>
                     <TouchableOpacity onPress={this._onBackPressHandler.bind(this)}>
                         <View style={styles.backContainer}>
-                            <Text style={styles.backText}>Back</Text>
+                            <Text style={styles.backText}>←</Text>
                         </View>
                     </TouchableOpacity>
 
                     <TouchableOpacity onPress={this._onToggleFavoriteHandler.bind(this)}>
                         <View style={styles.favouriteContainer}>
-                            <Text style={styles.favouriteText}>Favourite ({this.props.favorite ? '1' : '0'})</Text>
+                            <Text style={styles.favouriteText}>{this.props.favorite ? '★' : '☆'}</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
+
                 <ScrollView
                     scrollEventThrottle={200}
                     contentContainerStyle={styles.contentContainer}
@@ -272,6 +273,7 @@ const styles = StyleSheet.create({
     },
     navbar: {
         height: 50,
+        alignItems: 'center',
         justifyContent: 'space-between',
         flexDirection: 'row',
     },
