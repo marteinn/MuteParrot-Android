@@ -11,6 +11,7 @@ import {
     InteractionManager,
     ActivityIndicator,
     BackAndroid,
+    Modal,
 } from 'react-native';
 import {connect} from 'react-redux'
 
@@ -19,8 +20,10 @@ class Detail extends Component {
         super(props, context);
 
         this.state = {
-            renderPlaceholderOnly: true
+            renderPlaceholderOnly: true,
+            streamModalVisible: false,
         };
+
         this._hardwareBackPressHandler = this._hardwareBackPressHandler.bind(this);
     }
 
@@ -49,6 +52,47 @@ class Detail extends Component {
     }
 
     _onPlayPressHandler() {
+        if (this.props.release.streams.length > 1) {
+            this.setState({
+                streamModalVisible: true,
+            });
+        } else {
+            this._openStream(this.props.release.streams[0]);
+        }
+    }
+
+    _onStreamItemPressHandler(stream) {
+        this._openStream(stream);
+
+        this.setState({
+            streamModalVisible: false,
+        });
+    }
+
+    _closeStreamModalHandler() {
+        this.setState({
+            streamModalVisible: false,
+        });
+    }
+
+    _openStream(stream) {
+        switch (stream.source) {
+            case 'spotify':
+                this._openSpotifyStream(stream);
+                break;
+
+            default:
+                this._openStreamLink(stream);
+                break;
+        }
+    }
+
+    _openStreamLink(stream) {
+        Linking.openURL(stream.link)
+            .catch(err => console.error('An error occurred', err));
+    }
+
+    _openSpotifyStream(stream) {
         let streams = this.props.release.streams;
         let slug = streams[0].slug;
 
@@ -66,6 +110,44 @@ class Detail extends Component {
         );
     }
 
+    setModalVisible(visible) {
+        this.setState({streamModalVisible: visible});
+    }
+
+    _renderStreamModal() {
+        return (
+            <Modal
+                animationType={"slide"}
+                transparent={true}
+                visible={this.state.modalVisible}
+                onRequestClose={this._closeStreamModalHandler.bind(this)}
+                >
+                <View style={styles.streamModal}>
+                    <View style={styles.streamModalContainer}>
+                        <Text style={styles.streamTitleText}>Streams</Text>
+
+                        {this.props.release.streams.map((stream) => {
+                            return (
+                                <TouchableOpacity key={stream.slug} onPress={this._onStreamItemPressHandler.bind(this, stream)}>
+                                    <View style={styles.streamContainer}>
+                                        <Text>► {stream.name} ({stream.source})</Text>
+                                    </View>
+                                </TouchableOpacity>
+                            );
+                        })}
+
+                        <TouchableOpacity onPress={this._closeStreamModalHandler.bind(this)}>
+                            <View style={styles.streamCloseContainer}>
+                                <Text style={styles.streamCloseText}>Close</Text>
+                            </View>
+                        </TouchableOpacity>
+
+                    </View>
+                </View>
+            </Modal>
+        )
+    }
+
     render() {
         //if (this.state.renderPlaceholderOnly) {
             //return this._renderPlaceholderView();
@@ -73,6 +155,8 @@ class Detail extends Component {
 
         return (
             <View style={styles.container}>
+                {this.state.streamModalVisible ? this._renderStreamModal() : null}
+
                 <View style={styles.navbar}>
                     <TouchableHighlight onPress={this._onBackPressHandler.bind(this)}>
                         <View style={styles.backContainer}>
@@ -108,7 +192,7 @@ class Detail extends Component {
                     <View style={styles.rankingContainer}>
                         <Text style={styles.rankingLabelText}>Grade: </Text>
                         <View style={styles.rankingSymbolContainer}>
-                            <Text style={styles.rankingSymbolText}>{this.props.release.list_ranking/10}</Text>
+                            <Text style={styles.rankingSymbolText}>{this.props.release.average_ranking}</Text>
                         </View>
                     </View>
 
@@ -128,6 +212,44 @@ class Detail extends Component {
 }
 
 const styles = StyleSheet.create({
+    streamModal: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'rgba(0,0,0,0.5)',
+    },
+    streamModalContainer: {
+        padding: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#FFF',
+    },
+    streamContainer: {
+        height: 45,
+        alignItems: 'center',
+        justifyContent: 'center',
+
+        backgroundColor: '#99FFFF',
+        paddingTop: 5,
+        paddingLeft: 35,
+        paddingBottom: 5,
+        paddingRight: 35,
+        borderRadius: 35,
+
+        marginBottom: 10,
+    },
+    streamTitleText: {
+        fontWeight: 'bold',
+        marginBottom: 20,
+    },
+    streamCloseContainer: {
+        height: 45,
+    },
+    streamCloseText: {
+        marginTop: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     container: {
         flex: 1,
         backgroundColor: '#13212F'
@@ -136,7 +258,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#13212F'
+        backgroundColor: '#13212F',
     },
     navbar: {
         height: 50,
@@ -192,12 +314,15 @@ const styles = StyleSheet.create({
         fontSize: 12,
     },
     playContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
         backgroundColor: '#99FFFF',
         paddingTop: 5,
         paddingLeft: 35,
         paddingBottom: 5,
         paddingRight: 35,
         borderRadius: 15,
+        height: 35,
     },
     playText: {
         color: '#000'

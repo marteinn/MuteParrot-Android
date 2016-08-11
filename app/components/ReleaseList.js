@@ -5,7 +5,8 @@ import {
     View,
     TouchableOpacity,
     ListView,
-    TouchableHighlight
+    TouchableHighlight,
+    RefreshControl
 } from 'react-native';
 import {connect} from 'react-redux'
 import {fetchReleases} from '../actions/releases';
@@ -21,11 +22,24 @@ class ReleaseList extends React.Component {
             sectionHeaderHasChanged: (s1, s2) => s1 !== s2,
         });
         this.state = {
-            dataSource: ds.cloneWithRows([props.items])
+            dataSource: ds.cloneWithRows([props.items]),
+            refreshing: false
         };
     }
 
-    formatSections(data) {
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.items !== this.props.items) {
+            let sectionData = this._formatSections(nextProps.items);
+
+            this.setState({
+                items: nextProps.items,
+                //dataSource: this.state.dataSource.cloneWithRows(nextProps.items)
+                dataSource: this.state.dataSource.cloneWithRowsAndSections(sectionData)
+            })
+        }
+    }
+
+    _formatSections(data) {
         let sectionData = {};
         data.map((item) => {
             let key = item.published.substr(0, 10);
@@ -40,20 +54,12 @@ class ReleaseList extends React.Component {
         return sectionData;
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.items !== this.props.items) {
-            let sectionData = this.formatSections(nextProps.items);
-
-            this.setState({
-                items: nextProps.items,
-                //dataSource: this.state.dataSource.cloneWithRows(nextProps.items)
-                dataSource: this.state.dataSource.cloneWithRowsAndSections(sectionData)
-            })
-        }
+    _onRowPressHandler(item) {
+        this.props.onListPress(item);
     }
 
-    onRowPressHandler(item) {
-        this.props.onListPress(item);
+    _onRefresh() {
+        console.log('onRefresh!');
     }
 
     render() {
@@ -63,7 +69,7 @@ class ReleaseList extends React.Component {
                 dataSource={this.state.dataSource}
                 renderRow={(item, sectionId, rowId) => {
                     return (
-                        <TouchableHighlight onPress={this.onRowPressHandler.bind(this, item)}>
+                        <TouchableHighlight onPress={this._onRowPressHandler.bind(this, item)}>
                             <ReleaseRow release={item} />
                         </TouchableHighlight>
                     )
@@ -71,6 +77,12 @@ class ReleaseList extends React.Component {
                 renderSeparator={(sectionId, rowId) => <View key={`${sectionId}separator${rowId}`} style={styles.separator} />}
                 renderSectionHeader={(sectionData, sectionId) => <SectionHeader title={sectionId} />}
                 onEndReached={this.props.onEndReached.bind(this)}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={this.state.refreshing}
+                        onRefresh={this._onRefresh.bind(this)}
+                    />
+                }
             />
         );
     }

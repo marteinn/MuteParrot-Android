@@ -22,7 +22,7 @@ class ReleaseRow extends React.Component {
                         <Text style={styles.artistText} numberOfLines={1}>{this.props.release.artist}</Text>
                     </View>
                     <View style={styles.footerContainer}>
-                        <Text style={styles.createdText}>Grade: {this.props.release.list_ranking/10}</Text>
+                        <Text style={styles.createdText}>Grade: {this.props.release.average_ranking}</Text>
                     </View>
                 </View>
             </View>

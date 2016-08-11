@@ -25,7 +25,7 @@ const receiveReleases = (category, json) => {
 const fetchReleases = (category) => {
     return (dispatch, getState) => {
         let categoryState = getState().releasesByCategory[category];
-        let url = `http://muteparrot.com/api/v1/releases/${category}/?stream=spotify`;
+        let url = `http://muteparrot.com/api/v1/releases/${category}/?country=SE&stream=spotify,itunes`;
 
         if (categoryState && categoryState.next) {
             url = categoryState.next;
