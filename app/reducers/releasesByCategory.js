@@ -1,0 +1,45 @@
+import {REQUEST_RELEASES, RECEIVE_RELEASES} from '../actions/releases';
+
+
+function category(state={
+    isFetching: false,
+    lastUpdated: -1,
+    next: null,
+    ids: []
+}, action) {
+    switch(action.type) {
+        case REQUEST_RELEASES:
+            return Object.assign({}, state, {
+                isFetching: true
+            })
+
+        case RECEIVE_RELEASES:
+            let ids = action.releases.map((item) => item.slug);
+
+            return Object.assign({}, state, {
+                isFetching: false,
+                lastUpdated: action.receivedAt,
+                next: action.meta.next,
+                ids: state.ids.concat(ids)
+            })
+
+        default:
+            return state;
+    }
+}
+
+function releasesByCategory(state={
+}, action) {
+    switch(action.type) {
+        case REQUEST_RELEASES:
+        case RECEIVE_RELEASES:
+            return Object.assign({}, state, {
+                [action.category]: category(state[action.category], action)
+            });
+
+        default:
+            return state;
+    }
+}
+
+export default releasesByCategory;
