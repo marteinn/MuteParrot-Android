@@ -66,7 +66,7 @@ class ReleaseList extends React.Component {
     }
 
     _onRefresh() {
-        console.log('onRefresh!');
+        this.props.onListRefresh();
     }
 
     _renderRow(item, sectionId, rowId) {

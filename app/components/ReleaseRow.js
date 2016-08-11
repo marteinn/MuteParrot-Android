@@ -44,7 +44,7 @@ class ReleaseRow extends React.Component {
                     <Image source={{uri: this.props.release.cover}} style={styles.cover} />
                     <View style={styles.textContainer}>
                         <View style={styles.topContainer}>
-                            <Text style={styles.releaseText} numberOfLines={1}>{this.props.release.name} ({this.state.visited ? 'visited' : 'not-visited'})</Text>
+                            <Text style={styles.releaseText} numberOfLines={1}>{this.props.release.name}</Text>
                             <Text style={styles.artistText} numberOfLines={1}>{this.props.release.artist}</Text>
                         </View>
                         <View style={styles.footerContainer}>

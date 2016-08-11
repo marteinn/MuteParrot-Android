@@ -6,7 +6,10 @@ import {
     ListView
 } from 'react-native';
 import {connect} from 'react-redux'
-import {fetchReleases} from '../actions/releases';
+import {
+    fetchReleases,
+    fetchMoreReleases,
+} from '../actions/releases';
 import ReleaseList from '../components/ReleaseList';
 
 class Latest extends Component {
@@ -14,7 +17,7 @@ class Latest extends Component {
         this.props.dispatch(fetchReleases('latest'));
     }
 
-    onReleaseListPressHandler(item) {
+    _onReleaseListPressHandler(item) {
         if (! this.props.navigator) {
             console.log('Missing navigator props');
             return;
@@ -28,7 +31,15 @@ class Latest extends Component {
         });
     }
 
-    onEndReachedHandler() {
+    _onEndReachedHandler() {
+        if (this.props.isFetching) {
+            return;
+        }
+
+        this.props.dispatch(fetchMoreReleases('latest'));
+    }
+
+    _onListRefreshHandler() {
         if (this.props.isFetching) {
             return;
         }
@@ -46,8 +57,9 @@ class Latest extends Component {
                     style={styles.listContainer}
                     items={this.props.items}
                     visited={this.props.visited}
-                    onListPress={this.onReleaseListPressHandler.bind(this)}
-                    onEndReached={this.onEndReachedHandler.bind(this)}
+                    onListPress={this._onReleaseListPressHandler.bind(this)}
+                    onEndReached={this._onEndReachedHandler.bind(this)}
+                    onListRefresh={this._onListRefreshHandler.bind(this)}
                 />
             </View>
         );
