@@ -9,27 +9,46 @@ import {
     TouchableHighlight,
     Linking,
     InteractionManager,
-    ActivityIndicator
+    ActivityIndicator,
+    BackAndroid,
 } from 'react-native';
 import {connect} from 'react-redux'
 
 class Detail extends Component {
     constructor(props, context) {
         super(props, context);
-        this.state = {renderPlaceholderOnly: true};
+
+        this.state = {
+            renderPlaceholderOnly: true
+        };
+        this._hardwareBackPressHandler = this._hardwareBackPressHandler.bind(this);
     }
 
     componentDidMount() {
         InteractionManager.runAfterInteractions(() => {
             this.setState({renderPlaceholderOnly: false});
         });
+
+        BackAndroid.addEventListener('hardwareBackPress',
+            this._hardwareBackPressHandler);
     }
 
-    onBackPressHandler() {
+    componentWillUnmount() {
+        BackAndroid.removeEventListener('hardwareBackPress',
+            this._hardwareBackPressHandler);
+    }
+
+    _hardwareBackPressHandler() {
+        console.log('hardwareBackPressHandler');
+        this.props.navigator.pop();
+        return true;
+    }
+
+    _onBackPressHandler() {
         this.props.navigator.pop();
     }
 
-    onPlayPressHandler() {
+    _onPlayPressHandler() {
         let streams = this.props.release.streams;
         let slug = streams[0].slug;
 
@@ -55,7 +74,7 @@ class Detail extends Component {
         return (
             <View style={styles.container}>
                 <View style={styles.navbar}>
-                    <TouchableHighlight onPress={this.onBackPressHandler.bind(this)}>
+                    <TouchableHighlight onPress={this._onBackPressHandler.bind(this)}>
                         <View style={styles.backContainer}>
                             <Text style={styles.backText}>Back</Text>
                         </View>
@@ -69,7 +88,7 @@ class Detail extends Component {
                 </View>
 
                 <View style={styles.contentContainer}>
-                    <TouchableHighlight onPress={this.onPlayPressHandler.bind(this)}>
+                    <TouchableHighlight onPress={this._onPlayPressHandler.bind(this)}>
                         <View style={styles.coverContainer}>
                             <Image source={{uri: this.props.release.cover}} style={styles.coverImage} resizeMode={Image.resizeMode.contain} />
                         </View>
@@ -80,7 +99,7 @@ class Detail extends Component {
                         <Text style={styles.artistText}>{this.props.release.artist}</Text>
                     </View>
 
-                    <TouchableHighlight onPress={this.onPlayPressHandler.bind(this)}>
+                    <TouchableHighlight onPress={this._onPlayPressHandler.bind(this)}>
                         <View style={styles.playContainer}>
                             <Text style={styles.playText}>PLAY</Text>
                         </View>
