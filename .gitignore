@@ -42,3 +42,6 @@ android/keystores/debug.keystore
 
 # Virtualenv
 /venv
+
+# Keystore
+muteparrot.keystore
