@@ -102,13 +102,15 @@ class Detail extends Component {
     }
 
     _openSpotifyStream(stream) {
-        let streams = this.props.release.streams;
-        let slug = streams[0].slug;
+        let url = `https://open.spotify.com/album/${stream.slug}`;
 
-        let url = `https://open.spotify.com/album/${slug}`;
-
-        Linking.openURL(url)
-            .catch(err => console.error('An error occurred', err));
+        Linking.canOpenURL(stream.link).then(supported => {
+            if (! supported) {
+                return Linking.openURL(url);
+            } else {
+                return Linking.openURL(stream.link);
+            }
+        }).catch(err => console.error('An error occurred', err));
     }
 
     _renderPlaceholderView() {
@@ -158,10 +160,6 @@ class Detail extends Component {
     }
 
     render() {
-        //if (this.state.renderPlaceholderOnly) {
-            //return this._renderPlaceholderView();
-        //}
-
         return (
             <View style={styles.container}>
                 {this.state.streamModalVisible ? this._renderStreamModal() : null}
