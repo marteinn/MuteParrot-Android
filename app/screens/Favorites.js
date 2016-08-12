@@ -12,17 +12,15 @@ import {
     fetchReleases,
     fetchMoreReleases,
 } from '../actions/releases';
-import moment from 'moment';
-import SectionReleaseList from '../components/SectionReleaseList';
+import ReleaseList from '../components/ReleaseList';
 import FooterNav from '../components/FooterNav';
 import NavigatorUtils from '../utils/NavigatorUtils';
 
-class Latest extends Component {
+class Favorites extends Component {
     componentDidMount() {
         this.props.dispatch(fetchReleases('latest'));
     }
 
-    
     _onReleaseListPressHandler(item) {
         if (! this.props.navigator) {
             console.log('Missing navigator props');
@@ -35,12 +33,6 @@ class Latest extends Component {
                 slug: item.slug
             }
         });
-    }
-
-    _onFooterNavPressHandler(item) {
-        NavigatorUtils.jumpToOrPush({
-            name: item.name
-        }, this.props.navigator);
     }
 
     _onEndReachedHandler() {
@@ -59,33 +51,37 @@ class Latest extends Component {
         this.props.dispatch(fetchReleases('latest'));
     }
 
+    _onFooterNavPressHandler(item) {
+        NavigatorUtils.jumpToOrPush({
+            name: item.name
+        }, this.props.navigator);
+    }
 
     _renderPlaceholderView() {
         return (
-            <View style={styles.preloaderContainer}>
-                <ActivityIndicator size="large" color="#99FFFF" />
+            <View style={styles.placeholderContainer}>
+                <Text style={styles.placeholderText}>No favourites found!</Text>
             </View>
         );
     }
 
     render() {
-        if (! Object.keys(this.props.items).length) {
-            return this._renderPlaceholderView();
-        }
-
         return (
             <View style={styles.container}>
-                <SectionReleaseList
-                    style={styles.listContainer}
-                    items={this.props.items}
-                    visited={this.props.visited}
-                    onListPress={this._onReleaseListPressHandler.bind(this)}
-                    onEndReached={this._onEndReachedHandler.bind(this)}
-                    onListRefresh={this._onListRefreshHandler.bind(this)}
-                />
+                {! this.props.items.length ? this._renderPlaceholderView() : null}
+
+                {this.props.items.length ?
+                    <ReleaseList
+                        style={styles.listContainer}
+                        items={this.props.items}
+                        visited={this.props.visited}
+                        onListPress={this._onReleaseListPressHandler.bind(this)}
+                        onEndReached={this._onEndReachedHandler.bind(this)}
+                    />
+                : null}
                 <FooterNav
                     style={{height: 45}}
-                    selected='latest'
+                    selected='favorites'
                     onPress={this._onFooterNavPressHandler.bind(this)}
                 />
             </View>
@@ -96,6 +92,7 @@ class Latest extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: '#13212F',
         //justifyContent: 'center',
         //alignItems: 'center',
     },
@@ -120,58 +117,40 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         //margin: 10,
     },
-    preloaderContainer: {
+    placeholderContainer: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#13212F',
     },
+    placeholderText: {
+        color: '#FFF'
+    }
 });
 
-
 const formatSections = (data) => {
-    let sectionData = {};
-    let today = moment().format('YYYY-MM-DD');
-    data.map((item) => {
-        let key = item.published.substr(0, 10);
-
-        if (key === today) {
-            key = 'Today';
-        }
-
-        if (! sectionData[key]) {
-            sectionData[key] = [];
-        }
-
-        sectionData[key].push(item);
-    });
-
-    return sectionData;
+    return {
+        'Favorites': data,
+    };
 }
 
 const mapStateToProps = (state, ownProps) => {
-    let categoryState = Object.assign({
-        isFetching: false,
-        ids: []
-    }, state.releasesByCategory.latest);
-
-    let items = categoryState.ids.map((id) => state.releases[id]);
-    items = formatSections(items);
+    let items = state.favorites.map((id) => state.releases[id]);
 
     return {
-        isFetching: categoryState.isFetching,
+        isFetching: false,
         items,
         visited: state.visited,
     }
 }
 
 
-Latest = connect(mapStateToProps)(Latest);
+Favorites = connect(mapStateToProps)(Favorites);
 
-Latest.defaultProps = {
+Favorites.defaultProps = {
     isFetching: false,
-    items: {},
+    items: [],
     visited: []
 }
 
-export default Latest;
+export default Favorites;

@@ -9,6 +9,7 @@ import {
 import {connect} from 'react-redux'
 import Latest from '../screens/Latest';
 import Detail from '../screens/Detail';
+import Favorites from '../screens/Favorites';
 import {fetchCountry} from '../actions/country';
 
 class App extends Component {
@@ -22,12 +23,18 @@ class App extends Component {
         }
     }
 
-    navigatorRenderScene(route, navigator) {
+    _navigatorConfigureSceneHandler(route, routeStack) {
+        return Navigator.SceneConfigs.PushFromRight;
+    }
+
+    _navigatorRenderSceneHandler(route, navigator) {
         switch(route.name) {
             case 'latest':
-                return <Latest style={styles.contentContainer} navigator={navigator} {...route.passProps} />
+                return <Latest style={styles.contentContainer} navigator={navigator} {...route.passProps} />;
             case 'detail':
-                return <Detail style={styles.contentContainer} navigator={navigator} {...route.passProps} />
+                return <Detail style={styles.contentContainer} navigator={navigator} {...route.passProps} />;
+            case 'favorites':
+                return <Favorites style={styles.contentContainer} navigator={navigator} {...route.passProps} />;
             default:
                 return null;
         }
@@ -44,7 +51,7 @@ class App extends Component {
     render() {
         const routes = [
             {title: 'Latest', name: 'latest', index: 0},
-            //{title: 'Detail', name: 'detail', index: 1},
+            {title: 'Favorites', name: 'favorites', index: 1},
         ];
 
         if (this.props.country === null) {
@@ -56,8 +63,9 @@ class App extends Component {
                 style={styles.container}
                 initialRoute={routes[0]}
                 initialRouteStack={routes}
-                renderScene={this.navigatorRenderScene}
-            />
+                renderScene={this._navigatorRenderSceneHandler.bind(this)}
+                configureScene={this._navigatorConfigureSceneHandler.bind(this)}
+                />
         );
     }
 }

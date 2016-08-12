@@ -11,19 +11,21 @@ import {
 import {connect} from 'react-redux'
 import {fetchReleases} from '../actions/releases';
 import ReleaseRow from './ReleaseRow';
+import SectionHeader from './SectionHeader';
 
 
-class ReleaseList extends React.Component {
+class SectionReleaseList extends React.Component {
     constructor(props) {
         super(props);
 
         const ds = new ListView.DataSource({
             rowHasChanged: (r1, r2) => r1 !== r2,
+            sectionHeaderHasChanged: (s1, s2) => s1 !== s2,
         });
 
         this.state = {
             items: this.props.items,
-            dataSource: ds.cloneWithRows(this.props.items),
+            dataSource: ds.cloneWithRowsAndSections(this.props.items),
             refreshing: false
         };
     }
@@ -32,7 +34,8 @@ class ReleaseList extends React.Component {
         if (nextProps.items !== this.props.items) {
             this.setState({
                 items: nextProps.items,
-                dataSource: this.state.dataSource.cloneWithRows(nextProps.items)
+                //dataSource: this.state.dataSource.cloneWithRows(nextProps.items)
+                dataSource: this.state.dataSource.cloneWithRowsAndSections(nextProps.items)
             })
         }
     }
@@ -53,35 +56,27 @@ class ReleaseList extends React.Component {
         );
     }
 
-    _refreshControl() {
-        return (
-            <RefreshControl
-                refreshing={this.state.refreshing}
-                onRefresh={this._onRefresh.bind(this)}
-            />
-        );
-    }
-
     render() {
-        let refreshControl = null;
-
-        if (this.props.onListRefresh) {
-            refreshControl = this._refreshControl();
-        }
         return (
             <ListView
                 style={styles.container}
                 dataSource={this.state.dataSource}
                 renderRow={this._renderRow.bind(this)}
                 renderSeparator={(sectionId, rowId) => <View key={`${sectionId}separator${rowId}`} style={styles.separator} />}
+                renderSectionHeader={(sectionData, sectionId) => <SectionHeader title={sectionId} />}
                 onEndReached={this.props.onEndReached.bind(this)}
-                refreshControl={refreshControl}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={this.state.refreshing}
+                        onRefresh={this._onRefresh.bind(this)}
+                    />
+                }
             />
         );
     }
 }
 
-ReleaseList.defaultProps = {
+SectionReleaseList.defaultProps = {
     items: [],
     visited: [],
 }
@@ -99,4 +94,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ReleaseList;
+export default SectionReleaseList;
