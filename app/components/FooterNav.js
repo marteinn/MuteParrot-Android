@@ -52,6 +52,14 @@ class FooterNav extends React.Component {
                 title: 'Latest',
             },
             {
+                name: 'popular',
+                title: 'Popular',
+            },
+            {
+                name: 'editorial',
+                title: 'Editorial',
+            },
+            {
                 name: 'favorites',
                 title: 'Favorites',
             }

@@ -9,6 +9,8 @@ import {
 import {connect} from 'react-redux'
 import Latest from '../screens/Latest';
 import Detail from '../screens/Detail';
+import Popular from '../screens/Popular';
+import Editorial from '../screens/Editorial';
 import Favorites from '../screens/Favorites';
 import {fetchCountry} from '../actions/country';
 
@@ -35,6 +37,10 @@ class App extends Component {
                 return <Detail style={styles.contentContainer} navigator={navigator} {...route.passProps} />;
             case 'favorites':
                 return <Favorites style={styles.contentContainer} navigator={navigator} {...route.passProps} />;
+            case 'editorial':
+                return <Editorial style={styles.contentContainer} navigator={navigator} {...route.passProps} />;
+            case 'popular':
+                return <Popular style={styles.contentContainer} navigator={navigator} {...route.passProps} />;
             default:
                 return null;
         }
@@ -51,7 +57,9 @@ class App extends Component {
     render() {
         const routes = [
             {title: 'Latest', name: 'latest', index: 0},
-            {title: 'Favorites', name: 'favorites', index: 1},
+            {title: 'Popular', name: 'popular', index: 1},
+            {title: 'Editorial', name: 'editorial', index: 2},
+            {title: 'Favorites', name: 'favorites', index: 3},
         ];
 
         if (this.props.country === null) {
