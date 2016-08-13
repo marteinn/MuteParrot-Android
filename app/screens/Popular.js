@@ -129,12 +129,6 @@ const styles = StyleSheet.create({
     }
 });
 
-const formatSections = (data) => {
-    return {
-        'Favorites': data,
-    };
-}
-
 const mapStateToProps = (state, ownProps) => {
     let categoryState = Object.assign({
         isFetching: false,
@@ -149,7 +143,6 @@ const mapStateToProps = (state, ownProps) => {
         visited: state.visited,
     }
 }
-
 
 Popular = connect(mapStateToProps)(Popular);
 

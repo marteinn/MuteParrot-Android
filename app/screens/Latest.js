@@ -22,7 +22,6 @@ class Latest extends Component {
         this.props.dispatch(fetchReleases('latest'));
     }
 
-    
     _onReleaseListPressHandler(item) {
         if (! this.props.navigator) {
             console.log('Missing navigator props');
