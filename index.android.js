@@ -9,4 +9,4 @@ import {AppRegistry,} from 'react-native';
 
 import Root from './app/containers/Root';
 
-AppRegistry.registerComponent('ReactNativeTestApp', () => Root);
+AppRegistry.registerComponent('MuteParrot', () => Root);
