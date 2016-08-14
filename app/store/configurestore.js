@@ -9,12 +9,12 @@ const configureStore = (initialState) => {
         rootReducer,
         initialState,
         compose(
-            //autoRehydrate(),
+            autoRehydrate(),
             applyMiddleware(thunkMiddleware)
         )
     );
 
-    //persistStore(store, {storage: AsyncStorage})
+    persistStore(store, {storage: AsyncStorage})
 
     if (module.hot) {
         // Enable Webpack hot module replacement for reducers

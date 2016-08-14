@@ -77,7 +77,7 @@ class Favorites extends Component {
             <View style={styles.container}>
                 <Toolbar
                     style={styles.toolbar}
-                    title='Your favorites'
+                    title='Your Favorites'
                 />
                 {! this.props.items.length ? this._renderPlaceholderView() : null}
 

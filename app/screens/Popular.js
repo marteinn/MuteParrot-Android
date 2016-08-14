@@ -74,7 +74,7 @@ class Popular extends Component {
             <View style={styles.container}>
                 <Toolbar
                     style={styles.toolbar}
-                    title='Trending releases'
+                    title='Trending Releases'
                 />
 
                 {! this.props.items.length ? this._renderPlaceholderView() : null}

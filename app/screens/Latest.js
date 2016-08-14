@@ -80,7 +80,7 @@ class Latest extends Component {
             <View style={styles.container}>
                 <Toolbar
                     style={styles.toolbar}
-                    title='Latest releases'
+                    title='Latest Releases'
                 />
                 <SectionReleaseList
                     style={styles.listContainer}
