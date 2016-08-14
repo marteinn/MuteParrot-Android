@@ -30,8 +30,9 @@ const invalidateReleases = (category) => {
 const fetchReleases = (category) => {
     return (dispatch, getState) => {
         let countryCode = getState().country.code;
+        let stream = getState().settings.stream;
         let categoryState = getState().releasesByCategory[category];
-        let url = `http://muteparrot.com/api/v1/releases/${category}/?country=${countryCode}&stream=spotify,itunes`;
+        let url = `http://muteparrot.com/api/v1/releases/${category}/?country=${countryCode}&stream=${stream}`;
 
         dispatch(requestReleases(category));
         fetch(url)

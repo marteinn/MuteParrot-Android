@@ -3,6 +3,7 @@ import {
     StyleSheet,
     Text,
     View,
+    Image,
     ListView,
     ActivityIndicator,
     ToolbarAndroid
@@ -12,6 +13,7 @@ import {
     fetchReleases,
     fetchMoreReleases,
 } from '../actions/releases';
+import Toolbar from '../components/Toolbar';
 import ReleaseList from '../components/ReleaseList';
 import FooterNav from '../components/FooterNav';
 import NavigatorUtils from '../utils/NavigatorUtils';
@@ -60,7 +62,12 @@ class Favorites extends Component {
     _renderPlaceholderView() {
         return (
             <View style={styles.placeholderContainer}>
-                <Text style={styles.placeholderText}>No favourites found!</Text>
+                <Image
+                    style={{width: 48, height: 48, marginBottom: 20}}
+                    source={require('../img/ic_star_white_24dp.png')}
+                    resizeMode={Image.resizeMode.cover}
+                />
+                <Text style={styles.placeholderText}>Releases you star will show up here</Text>
             </View>
         );
     }
@@ -68,6 +75,10 @@ class Favorites extends Component {
     render() {
         return (
             <View style={styles.container}>
+                <Toolbar
+                    style={styles.toolbar}
+                    title='Your favorites'
+                />
                 {! this.props.items.length ? this._renderPlaceholderView() : null}
 
                 {this.props.items.length ?
@@ -80,7 +91,6 @@ class Favorites extends Component {
                     />
                 : null}
                 <FooterNav
-                    style={{height: 45}}
                     selected='favorites'
                     onPress={this._onFooterNavPressHandler.bind(this)}
                 />
@@ -92,22 +102,12 @@ class Favorites extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        //backgroundColor: '#13212F',
         backgroundColor: '#13212F',
         //justifyContent: 'center',
         //alignItems: 'center',
     },
     toolbar: {
-        height: 56,
-        //backgroundColor: '#E6E6E6',
-    },
-    navbar: {
-        height: 45,
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'row',
-    },
-    navbarTitleText: {
-        color: '#FFF',
     },
     listContainer: {
         flex: 1,

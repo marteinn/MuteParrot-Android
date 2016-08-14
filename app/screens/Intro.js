@@ -10,11 +10,17 @@ import {
 } from 'react-native';
 import {connect} from 'react-redux'
 import {writeSetting} from '../actions/settings';
+import NavigatorUtils from '../utils/NavigatorUtils';
 
 class Intro extends Component {
     _onOkPressHandler() {
         this.props.dispatch(writeSetting('firstOpening', false));
-        this.props.navigator.jumpForward();
+
+        let routes = this.props.navigator.getCurrentRoutes();
+
+        NavigatorUtils.jumpToOrPush({
+            name: 'latest'
+        }, this.props.navigator);
     }
 
     render() {
@@ -22,7 +28,7 @@ class Intro extends Component {
             <View style={styles.container}>
                 <Image
                     style={styles.logoImage}
-                    source={require('../img/logo-mp.png')}
+                    source={require('../img/logo_mp.png')}
                     resizeMode={Image.resizeMode.cover}
                     />
 

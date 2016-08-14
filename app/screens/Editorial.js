@@ -12,6 +12,7 @@ import {
     fetchReleases,
     fetchMoreReleases,
 } from '../actions/releases';
+import Toolbar from '../components/Toolbar';
 import ReleaseList from '../components/ReleaseList';
 import FooterNav from '../components/FooterNav';
 import NavigatorUtils from '../utils/NavigatorUtils';
@@ -68,6 +69,10 @@ class Editorial extends Component {
     render() {
         return (
             <View style={styles.container}>
+                <Toolbar
+                    style={styles.toolbar}
+                    title='Highest Rated Relases'
+                />
                 {! this.props.items.length ? this._renderPlaceholderView() : null}
 
                 {this.props.items.length ?
@@ -98,14 +103,8 @@ const styles = StyleSheet.create({
         //alignItems: 'center',
     },
     toolbar: {
-        height: 56,
-        //backgroundColor: '#E6E6E6',
     },
     navbar: {
-        height: 45,
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'row',
     },
     navbarTitleText: {
         color: '#FFF',

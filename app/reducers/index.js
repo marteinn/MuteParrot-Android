@@ -4,6 +4,7 @@ import releasesByCategory from './releasesByCategory';
 import favorites from './favorites';
 import visited from './visited';
 import country from './country';
+import countries from './countries';
 import settings from './settings';
 
 const rootReducer = combineReducers({
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
     favorites,
     visited,
     country,
+    countries,
     settings,
 });
 

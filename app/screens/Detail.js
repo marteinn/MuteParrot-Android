@@ -141,7 +141,13 @@ class Detail extends Component {
                             return (
                                 <TouchableOpacity key={stream.slug} onPress={this._onStreamItemPressHandler.bind(this, stream)}>
                                     <View style={styles.streamContainer}>
-                                        <Text>► {stream.name} ({stream.source})</Text>
+
+                                        <Image
+                                            style={styles.streamPlayImage}
+                                            source={require('../img/ic_play_arrow_black_24dp.png')}
+                                            resizeMode={Image.resizeMode.cover}
+                                        />
+                                        <Text>{stream.name} ({stream.source})</Text>
                                     </View>
                                 </TouchableOpacity>
                             );
@@ -167,13 +173,24 @@ class Detail extends Component {
                 <View style={styles.navbar}>
                     <TouchableOpacity onPress={this._onBackPressHandler.bind(this)}>
                         <View style={styles.backContainer}>
-                            <Text style={styles.backText}>←</Text>
+                            <Image
+                                source={require('../img/ic_arrow_back_white_24dp.png')}
+                                resizeMode={Image.resizeMode.cover}
+                            />
                         </View>
                     </TouchableOpacity>
 
                     <TouchableOpacity onPress={this._onToggleFavoriteHandler.bind(this)}>
                         <View style={styles.favouriteContainer}>
-                            <Text style={styles.favouriteText}>{this.props.favorite ? '★' : '☆'}</Text>
+                            {this.props.favorite ?
+                                <Image
+                                    source={require('../img/ic_star_white_24dp.png')}
+                                />
+                                    :
+                                <Image
+                                    source={require('../img/ic_star_border_white_24dp.png')}
+                                />
+                            }
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -209,6 +226,9 @@ class Detail extends Component {
                         {this.props.release.genres.map((genre, index) => {
                             return (
                                 <View style={styles.genreContainer} key={index}>
+                                    <Image
+                                    source={require('../img/ic_label_outline_white_24dp.png')}
+                                    />
                                     <Text style={styles.genreText}>{genre.name}</Text>
                                 </View>
                             );
@@ -237,6 +257,7 @@ const styles = StyleSheet.create({
         height: 45,
         alignItems: 'center',
         justifyContent: 'center',
+        flexDirection: 'row',
 
         backgroundColor: '#99FFFF',
         paddingTop: 5,
@@ -250,6 +271,9 @@ const styles = StyleSheet.create({
     streamTitleText: {
         fontWeight: 'bold',
         marginBottom: 20,
+    },
+    streamPlayImage: {
+        marginRight: 5,
     },
     streamCloseContainer: {
         height: 45,
@@ -311,14 +335,19 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     genreContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
         marginLeft: 5,
         marginRight: 5,
         marginBottom: 5,
         padding: 5,
-        backgroundColor: '#FFF',
+        //backgroundColor: '#FFF',
     },
     genreText: {
         fontSize: 12,
+        //color: '#222222',
+        color: '#FFF',
+        marginLeft: 5,
     },
     playContainer: {
         alignItems: 'center',

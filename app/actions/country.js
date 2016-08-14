@@ -1,5 +1,13 @@
+const WRITE_COUNTRY = 'WRITE_COUNTRY';
 const REQUEST_COUNTRY = 'REQUEST_COUNTRY';
 const RECEIVE_COUNTRY = 'RECEIVE_COUNTRY';
+
+const writeCountry = (code) => {
+    return {
+        type: WRITE_COUNTRY,
+        code
+    }
+}
 
 const requestCountry = () => {
     return {
@@ -22,7 +30,6 @@ const fetchCountry = () => {
         fetch(url)
             .then(response => response.json())
             .then((json) => {
-                console.log('loaded');
                 dispatch(receiveCountry(json))
             })
             .catch((error) => {
@@ -32,7 +39,9 @@ const fetchCountry = () => {
 }
 
 export {
+    WRITE_COUNTRY,
     REQUEST_COUNTRY,
     RECEIVE_COUNTRY,
+    writeCountry,
     fetchCountry,
 };

@@ -32,7 +32,11 @@ class ReleaseRow extends React.Component {
     _renderVisitedIcon() {
         return (
             <View style={styles.visitedIconContainer}>
-                <Text>✓</Text>
+                <Image
+                    style={styles.visitedIconImage}
+                    source={require('../img/ic_done_black_24dp.png')}
+                    resizeMode={Image.resizeMode.cover}
+                />
             </View>
         );
     }
@@ -94,6 +98,10 @@ const styles = StyleSheet.create({
     createdText: {
         fontSize: 15,
         color: '#222221',
+    },
+    visitedIconImage: {
+        width: 24,
+        height: 24,
     },
     visitedIconContainer: {
         alignItems: 'center',

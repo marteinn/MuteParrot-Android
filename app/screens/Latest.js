@@ -5,7 +5,6 @@ import {
     View,
     ListView,
     ActivityIndicator,
-    ToolbarAndroid
 } from 'react-native';
 import {connect} from 'react-redux'
 import {
@@ -14,6 +13,7 @@ import {
 } from '../actions/releases';
 import moment from 'moment';
 import SectionReleaseList from '../components/SectionReleaseList';
+import Toolbar from '../components/Toolbar';
 import FooterNav from '../components/FooterNav';
 import NavigatorUtils from '../utils/NavigatorUtils';
 
@@ -74,6 +74,10 @@ class Latest extends Component {
 
         return (
             <View style={styles.container}>
+                <Toolbar
+                    style={styles.toolbar}
+                    title='Latest releases'
+                />
                 <SectionReleaseList
                     style={styles.listContainer}
                     items={this.props.items}
@@ -83,7 +87,6 @@ class Latest extends Component {
                     onListRefresh={this._onListRefreshHandler.bind(this)}
                 />
                 <FooterNav
-                    style={{height: 45}}
                     selected='latest'
                     onPress={this._onFooterNavPressHandler.bind(this)}
                 />
@@ -99,17 +102,6 @@ const styles = StyleSheet.create({
         //alignItems: 'center',
     },
     toolbar: {
-        height: 56,
-        //backgroundColor: '#E6E6E6',
-    },
-    navbar: {
-        height: 45,
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'row',
-    },
-    navbarTitleText: {
-        color: '#FFF',
     },
     listContainer: {
         flex: 1,

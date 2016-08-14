@@ -4,14 +4,14 @@ import {
     Text,
     View,
     ListView,
-    ActivityIndicator,
-    ToolbarAndroid
+    ActivityIndicator
 } from 'react-native';
 import {connect} from 'react-redux'
 import {
     fetchReleases,
     fetchMoreReleases,
 } from '../actions/releases';
+import Toolbar from '../components/Toolbar';
 import ReleaseList from '../components/ReleaseList';
 import FooterNav from '../components/FooterNav';
 import NavigatorUtils from '../utils/NavigatorUtils';
@@ -68,10 +68,15 @@ class Popular extends Component {
     render() {
         return (
             <View style={styles.container}>
+                <Toolbar
+                    style={styles.toolbar}
+                    title='Trending releases'
+                />
+
                 {! this.props.items.length ? this._renderPlaceholderView() : null}
 
                 {this.props.items.length ?
-                    <ReleaseList
+                                        <ReleaseList
                         style={styles.listContainer}
                         items={this.props.items}
                         visited={this.props.visited}
@@ -81,7 +86,6 @@ class Popular extends Component {
                     />
                 : null}
                 <FooterNav
-                    style={{height: 45}}
                     selected='popular'
                     onPress={this._onFooterNavPressHandler.bind(this)}
                 />
@@ -97,15 +101,11 @@ const styles = StyleSheet.create({
         //justifyContent: 'center',
         //alignItems: 'center',
     },
+    footerNav: {
+    },
     toolbar: {
-        height: 56,
-        //backgroundColor: '#E6E6E6',
     },
     navbar: {
-        height: 45,
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'row',
     },
     navbarTitleText: {
         color: '#FFF',
