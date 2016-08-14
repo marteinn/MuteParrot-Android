@@ -13,6 +13,7 @@ import Detail from '../screens/Detail';
 import Popular from '../screens/Popular';
 import Editorial from '../screens/Editorial';
 import Favorites from '../screens/Favorites';
+import Settings from '../screens/Settings';
 import {fetchCountry} from '../actions/country';
 
 class App extends Component {
@@ -44,6 +45,8 @@ class App extends Component {
                 return <Editorial style={styles.contentContainer} navigator={navigator} {...route.passProps} />;
             case 'popular':
                 return <Popular style={styles.contentContainer} navigator={navigator} {...route.passProps} />;
+            case 'settings':
+                return <Settings style={styles.contentContainer} navigator={navigator} {...route.passProps} />;
             default:
                 return null;
         }
@@ -63,6 +66,7 @@ class App extends Component {
             {title: 'Popular', name: 'popular', index: 2},
             {title: 'Editorial', name: 'editorial', index: 3},
             {title: 'Favorites', name: 'favorites', index: 4},
+            {title: 'Settings', name: 'settings', index: 5},
         ];
 
         if (this.props.settings.firstOpening) {
