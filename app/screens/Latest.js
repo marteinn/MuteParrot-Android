@@ -19,7 +19,11 @@ import NavigatorUtils from '../utils/NavigatorUtils';
 
 class Latest extends Component {
     componentDidMount() {
-        this.props.dispatch(fetchReleases('latest'));
+        // Only load data if it is older then 1hr
+        let updatedDiff = Date.now()-this.props.lastUpdated;
+        if (updatedDiff > (60*60*1000)) {
+            this.props.dispatch(fetchReleases('latest'));
+        }
     }
 
     _onReleaseListPressHandler(item) {
@@ -81,6 +85,7 @@ class Latest extends Component {
                 <SectionReleaseList
                     style={styles.listContainer}
                     items={this.props.items}
+                    isFetching={this.props.isFetching}
                     visited={this.props.visited}
                     onListPress={this._onReleaseListPressHandler.bind(this)}
                     onEndReached={this._onEndReachedHandler.bind(this)}
@@ -153,6 +158,7 @@ const mapStateToProps = (state, ownProps) => {
         isFetching: categoryState.isFetching,
         items,
         visited: state.visited,
+        lastUpdated: categoryState.lastUpdated,
     }
 }
 
@@ -162,7 +168,8 @@ Latest = connect(mapStateToProps)(Latest);
 Latest.defaultProps = {
     isFetching: false,
     items: {},
-    visited: []
+    visited: [],
+    lastUpdated: -1,
 }
 
 export default Latest;

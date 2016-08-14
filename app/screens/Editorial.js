@@ -19,7 +19,11 @@ import NavigatorUtils from '../utils/NavigatorUtils';
 
 class Editorial extends Component {
     componentDidMount() {
-        this.props.dispatch(fetchReleases('editorial'));
+        // Only load data if it is older then 1hr
+        let updatedDiff = Date.now()-this.props.lastUpdated;
+        if (updatedDiff > (60*60*1000)) {
+            this.props.dispatch(fetchReleases('editorial'));
+        }
     }
 
     _onReleaseListPressHandler(item) {
@@ -80,6 +84,7 @@ class Editorial extends Component {
                         style={styles.listContainer}
                         items={this.props.items}
                         visited={this.props.visited}
+                        isFetching={this.props.isFetching}
                         onListPress={this._onReleaseListPressHandler.bind(this)}
                         onEndReached={this._onEndReachedHandler.bind(this)}
                         onListRefresh={this._onListRefreshHandler.bind(this)}
@@ -143,9 +148,10 @@ const mapStateToProps = (state, ownProps) => {
     let items = categoryState.ids.map((id) => state.releases[id]);
 
     return {
-        isFetching: false,
+        isFetching: categoryState.isFetching,
         items,
         visited: state.visited,
+        lastUpdated: categoryState.lastUpdated,
     }
 }
 
@@ -155,7 +161,8 @@ Editorial = connect(mapStateToProps)(Editorial);
 Editorial.defaultProps = {
     isFetching: false,
     items: [],
-    visited: []
+    visited: [],
+    lastUpdated: -1,
 }
 
 export default Editorial;

@@ -6,7 +6,8 @@ import {
     TouchableOpacity,
     ListView,
     TouchableHighlight,
-    RefreshControl
+    RefreshControl,
+    ActivityIndicator
 } from 'react-native';
 import {connect} from 'react-redux'
 import {fetchReleases} from '../actions/releases';
@@ -62,20 +63,36 @@ class ReleaseList extends React.Component {
         );
     }
 
+    _onRenderFooter() {
+        if (! this.props.isFetching) {
+            return null;
+        }
+
+        return (
+            <View style={styles.footerPreloaderContainer}>
+                <ActivityIndicator size="large" color="#222222" />
+            </View>
+        );
+    }
+
     render() {
         let refreshControl = null;
 
         if (this.props.onListRefresh) {
             refreshControl = this._refreshControl();
         }
+
         return (
             <ListView
                 style={styles.container}
                 dataSource={this.state.dataSource}
                 renderRow={this._renderRow.bind(this)}
                 renderSeparator={(sectionId, rowId) => <View key={`${sectionId}separator${rowId}`} style={styles.separator} />}
+                renderFooter={this._onRenderFooter.bind(this)}
                 onEndReached={this.props.onEndReached.bind(this)}
+                onEndReachedThreshold={200}
                 refreshControl={refreshControl}
+n
             />
         );
     }
@@ -84,6 +101,7 @@ class ReleaseList extends React.Component {
 ReleaseList.defaultProps = {
     items: [],
     visited: [],
+    isFetching: false,
 }
 
 const styles = StyleSheet.create({
@@ -97,6 +115,11 @@ const styles = StyleSheet.create({
         height: StyleSheet.hairlineWidth,
         backgroundColor: '#13212F',
     },
+    footerPreloaderContainer: {
+        backgroundColor: '#FFF',
+        paddingTop: 20,
+        paddingBottom: 20
+    }
 });
 
 export default ReleaseList;

@@ -40,6 +40,24 @@ function category(state={
 }
 
 function releasesByCategory(state={
+    latest: {
+        isFetching: false,
+        lastUpdated: -1,
+        ids: [],
+        next: null,
+    },
+    popular: {
+        isFetching: false,
+        lastUpdated: -1,
+        ids: [],
+        next: null,
+    },
+    editorial: {
+        isFetching: false,
+        lastUpdated: -1,
+        ids: [],
+        next: null,
+    },
 }, action) {
     switch(action.type) {
         case INVALIDATE_RELEASES:

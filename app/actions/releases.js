@@ -32,9 +32,10 @@ const fetchReleases = (category) => {
         let countryCode = getState().country.code;
         let stream = getState().settings.stream;
         let categoryState = getState().releasesByCategory[category];
-        let url = `http://muteparrot.com/api/v1/releases/${category}/?country=${countryCode}&stream=${stream}`;
+        let url = `http://muteparrot.com/api/v1/releases/${category}/?country=${countryCode}&stream=${stream}&limit=30`;
 
         dispatch(requestReleases(category));
+        console.log(url);
         fetch(url)
             .then(response => response.json())
             .then((json) => {

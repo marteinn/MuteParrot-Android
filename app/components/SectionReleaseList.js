@@ -6,7 +6,8 @@ import {
     TouchableOpacity,
     ListView,
     TouchableHighlight,
-    RefreshControl
+    RefreshControl,
+    ActivityIndicator
 } from 'react-native';
 import {connect} from 'react-redux'
 import {fetchReleases} from '../actions/releases';
@@ -48,6 +49,18 @@ class SectionReleaseList extends React.Component {
         this.props.onListRefresh();
     }
 
+    _onRenderFooter() {
+        if (! this.props.isFetching) {
+            return null;
+        }
+
+        return (
+            <View style={styles.footerPreloaderContainer}>
+                <ActivityIndicator size="large" color="#222222" />
+            </View>
+        );
+    }
+
     _renderRow(item, sectionId, rowId) {
         let visited = this.props.visited.includes(item.slug);
 
@@ -64,7 +77,9 @@ class SectionReleaseList extends React.Component {
                 renderRow={this._renderRow.bind(this)}
                 renderSeparator={(sectionId, rowId) => <View key={`${sectionId}separator${rowId}`} style={styles.separator} />}
                 renderSectionHeader={(sectionData, sectionId) => <SectionHeader title={sectionId} />}
+                renderFooter={this._onRenderFooter.bind(this)}
                 onEndReached={this.props.onEndReached.bind(this)}
+                onEndReachedThreshold={200}
                 refreshControl={
                     <RefreshControl
                         refreshing={this.state.refreshing}
@@ -92,6 +107,11 @@ const styles = StyleSheet.create({
         height: StyleSheet.hairlineWidth,
         backgroundColor: '#13212F',
     },
+    footerPreloaderContainer: {
+        backgroundColor: '#FFF',
+        paddingTop: 20,
+        paddingBottom: 20
+    }
 });
 
 export default SectionReleaseList;
