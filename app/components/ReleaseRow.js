@@ -4,28 +4,61 @@ import {
     Text,
     View,
     TouchableOpacity,
+    TouchableHighlight,
     Image
 } from 'react-native';
 
 class ReleaseRow extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            visited: props.visited,
+        };
+    }
+
     setNativeProps(nativeProps) {
         this._root.setNativeProps(nativeProps);
     }
 
+    _onPressHandler(item) {
+        this.props.onRowPress(this.props.release);
+
+        this.setState({
+            visited: true
+        });
+    }
+
+    _renderVisitedIcon() {
+        return (
+            <View style={styles.visitedIconContainer}>
+                <Image
+                    style={styles.visitedIconImage}
+                    source={require('../img/ic_done_black_24dp.png')}
+                    resizeMode={Image.resizeMode.cover}
+                />
+            </View>
+        );
+    }
+
     render() {
         return (
-            <View style={styles.item} ref={component => this._root = component} {...this.props}>
-                <Image source={{uri: this.props.release.cover}} style={styles.photo} />
-                <View style={styles.textContainer}>
-                    <View style={styles.topContainer}>
-                        <Text style={styles.releaseText} numberOfLines={1}>{this.props.release.name}</Text>
-                        <Text style={styles.artistText} numberOfLines={1}>{this.props.release.artist}</Text>
+            <TouchableHighlight onPress={this._onPressHandler.bind(this)}>
+                <View style={styles.item} ref={component => this._root = component} {...this.props}>
+                    <Image source={{uri: this.props.release.cover}} style={styles.cover} />
+                    <View style={styles.textContainer}>
+                        <View style={styles.topContainer}>
+                            <Text style={styles.releaseText} numberOfLines={1}>{this.props.release.name}</Text>
+                            <Text style={styles.artistText} numberOfLines={1}>{this.props.release.artist}</Text>
+                        </View>
+                        <View style={styles.footerContainer}>
+                            <Text style={styles.createdText}>Grade: {this.props.release.average_ranking}</Text>
+                        </View>
                     </View>
-                    <View style={styles.footerContainer}>
-                        <Text style={styles.createdText}>Grade: {this.props.release.list_ranking/10}</Text>
-                    </View>
+                    {this.state.visited ? this._renderVisitedIcon() : null}
                 </View>
-            </View>
+            </TouchableHighlight>
+
         )
     }
 }
@@ -35,6 +68,10 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         backgroundColor: '#FFFFFF'
+    },
+    cover: {
+        height: 100,
+        width: 100
     },
     textContainer: {
         flex: 1,
@@ -51,18 +88,27 @@ const styles = StyleSheet.create({
     },
     artistText: {
         fontSize: 15,
+        color: '#222221',
     },
     releaseText: {
         fontSize: 15,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        color: '#222221',
     },
     createdText: {
-        fontSize: 15
+        fontSize: 15,
+        color: '#222221',
     },
-    photo: {
-        height: 100,
-        width: 100
-    }
+    visitedIconImage: {
+        width: 24,
+        height: 24,
+    },
+    visitedIconContainer: {
+        alignItems: 'center',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        marginRight: 10,
+    },
 });
 
 export default ReleaseRow;

@@ -5,12 +5,14 @@ import {
     View,
     TouchableOpacity,
     ListView,
-    TouchableHighlight
+    TouchableHighlight,
+    RefreshControl,
+    ActivityIndicator
 } from 'react-native';
 import {connect} from 'react-redux'
 import {fetchReleases} from '../actions/releases';
 import ReleaseRow from './ReleaseRow';
-import SectionHeader from './SectionHeader';
+
 
 class ReleaseList extends React.Component {
     constructor(props) {
@@ -18,66 +20,88 @@ class ReleaseList extends React.Component {
 
         const ds = new ListView.DataSource({
             rowHasChanged: (r1, r2) => r1 !== r2,
-            sectionHeaderHasChanged: (s1, s2) => s1 !== s2,
         });
+
         this.state = {
-            dataSource: ds.cloneWithRows([props.items])
+            items: this.props.items,
+            dataSource: ds.cloneWithRows(this.props.items),
+            refreshing: false
         };
-    }
-
-    formatSections(data) {
-        let sectionData = {};
-        data.map((item) => {
-            let key = item.published.substr(0, 10);
-
-            if (! sectionData[key]) {
-                sectionData[key] = [];
-            }
-
-            sectionData[key].push(item);
-        });
-
-        return sectionData;
     }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.items !== this.props.items) {
-            let sectionData = this.formatSections(nextProps.items);
-
             this.setState({
                 items: nextProps.items,
-                //dataSource: this.state.dataSource.cloneWithRows(nextProps.items)
-                dataSource: this.state.dataSource.cloneWithRowsAndSections(sectionData)
+                dataSource: this.state.dataSource.cloneWithRows(nextProps.items)
             })
         }
     }
 
-    onRowPressHandler(item) {
+    _onRowPressHandler(item) {
         this.props.onListPress(item);
     }
 
+    _onRefresh() {
+        this.props.onListRefresh();
+    }
+
+    _renderRow(item, sectionId, rowId) {
+        let visited = this.props.visited.includes(item.slug);
+
+        return (
+            <ReleaseRow release={item} visited={visited} onRowPress={this._onRowPressHandler.bind(this)} />
+        );
+    }
+
+    _refreshControl() {
+        return (
+            <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this._onRefresh.bind(this)}
+            />
+        );
+    }
+
+    _onRenderFooter() {
+        if (! this.props.isFetching) {
+            return null;
+        }
+
+        return (
+            <View style={styles.footerPreloaderContainer}>
+                <ActivityIndicator size="large" color="#222222" />
+            </View>
+        );
+    }
+
     render() {
+        let refreshControl = null;
+
+        if (this.props.onListRefresh) {
+            refreshControl = this._refreshControl();
+        }
+
         return (
             <ListView
                 style={styles.container}
                 dataSource={this.state.dataSource}
-                renderRow={(item, sectionId, rowId) => {
-                    return (
-                        <TouchableHighlight onPress={this.onRowPressHandler.bind(this, item)}>
-                            <ReleaseRow release={item} />
-                        </TouchableHighlight>
-                    )
-                }}
+                renderRow={this._renderRow.bind(this)}
                 renderSeparator={(sectionId, rowId) => <View key={`${sectionId}separator${rowId}`} style={styles.separator} />}
-                renderSectionHeader={(sectionData, sectionId) => <SectionHeader title={sectionId} />}
+                renderFooter={this._onRenderFooter.bind(this)}
                 onEndReached={this.props.onEndReached.bind(this)}
+                onEndReachedThreshold={200}
+                refreshControl={refreshControl}
+n
             />
         );
     }
 }
 
 ReleaseList.defaultProps = {
-    items: []
+    items: [],
+    visited: [],
+    isFetching: false,
 }
 
 const styles = StyleSheet.create({
@@ -91,6 +115,11 @@ const styles = StyleSheet.create({
         height: StyleSheet.hairlineWidth,
         backgroundColor: '#13212F',
     },
+    footerPreloaderContainer: {
+        backgroundColor: '#FFF',
+        paddingTop: 20,
+        paddingBottom: 20
+    }
 });
 
 export default ReleaseList;

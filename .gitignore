@@ -40,5 +40,8 @@ buck-out/
 android/app/libs
 android/keystores/debug.keystore
 
-# Virtualenv
+# Python
 /venv
+
+# Keys
+*.keystore

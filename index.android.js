@@ -1,12 +1,11 @@
 /**
- * Sample React Native App
+ * MuteParrot App
  * https://github.com/facebook/react-native
  * @flow
  */
-
 
 import {AppRegistry,} from 'react-native';
 
 import Root from './app/containers/Root';
 
-AppRegistry.registerComponent('ReactNativeTestApp', () => Root);
+AppRegistry.registerComponent('MuteParrot', () => Root);

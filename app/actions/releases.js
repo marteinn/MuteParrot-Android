@@ -1,8 +1,6 @@
 const REQUEST_RELEASES = 'REQUEST_RELEASES';
 const RECEIVE_RELEASES = 'RECEIVE_RELEASES';
-
-// http://muteparrot.com/api/v1/releases/latest/?country=SE&limit=19&offset=0&stream=spotify
-//
+const INVALIDATE_RELEASES = 'INVALIDATE_RELEASES';
 
 const requestReleases = (category) => {
     return {
@@ -22,16 +20,39 @@ const receiveReleases = (category, json) => {
     }
 }
 
+const invalidateReleases = (category) => {
+    return {
+        type: INVALIDATE_RELEASES,
+        category
+    }
+}
+
 const fetchReleases = (category) => {
     return (dispatch, getState) => {
+        let countryCode = getState().country.code;
+        let stream = getState().settings.stream;
         let categoryState = getState().releasesByCategory[category];
-        let url = `http://muteparrot.com/api/v1/releases/${category}/?stream=spotify`;
+        let url = `http://muteparrot.com/api/v1/releases/${category}/?country=${countryCode}&stream=${stream}&limit=30`;
 
-        if (categoryState && categoryState.next) {
-            url = categoryState.next;
-        }
+        dispatch(requestReleases(category));
+        console.log(url);
+        fetch(url)
+            .then(response => response.json())
+            .then((json) => {
+                dispatch(invalidateReleases(category))
+                dispatch(receiveReleases(category, json))
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }
+}
 
-        console.log(`loading url ${url}`);
+const fetchMoreReleases = (category) => {
+    return (dispatch, getState) => {
+        let countryCode = getState().country.code;
+        let categoryState = getState().releasesByCategory[category];
+        let url = categoryState.next;
 
         dispatch(requestReleases(category));
         fetch(url)
@@ -48,7 +69,9 @@ const fetchReleases = (category) => {
 export {
     REQUEST_RELEASES,
     RECEIVE_RELEASES,
+    INVALIDATE_RELEASES,
     requestReleases,
     receiveReleases,
-    fetchReleases
+    fetchReleases,
+    fetchMoreReleases,
 };
