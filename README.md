@@ -1,5 +1,7 @@
 # MuteParrot - Android
 
+This is a React Native for Android prototype app, based on React and Redux
+
 ## Getting started
 
 ```
