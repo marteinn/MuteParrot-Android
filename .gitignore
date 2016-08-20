@@ -40,8 +40,8 @@ buck-out/
 android/app/libs
 android/keystores/debug.keystore
 
-# Virtualenv
+# Python
 /venv
 
-# Keystore
-muteparrot.keystore
+# Keys
+*.keystore

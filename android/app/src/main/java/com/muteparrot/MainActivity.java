@@ -1,4 +1,4 @@
-package com.reactnativetestapp;
+package com.muteparrot;
 
 import com.facebook.react.ReactActivity;
 

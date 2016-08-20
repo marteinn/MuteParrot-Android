@@ -1,4 +1,4 @@
-package com.reactnativetestapp;
+package com.muteparrot;
 
 import android.app.Application;
 import android.util.Log;
