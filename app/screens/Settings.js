@@ -20,10 +20,6 @@ import NavigatorUtils from '../utils/NavigatorUtils';
 class Settings extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            country: 'java',
-        }
     }
 
     componentDidMount() {
@@ -88,7 +84,7 @@ class Settings extends Component {
                     </View>
 
                     <View style={styles.sectionContainer}>
-                        <Text style={styles.inputLabelText}>Streaming service</Text>
+                        <Text style={styles.inputLabelText}>Listening service</Text>
                         <Picker
                             style={styles.inputSelector}
                             selectedValue={this.props.settings.stream}
